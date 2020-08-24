@@ -33,9 +33,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Paint Program");
 
-        BorderPane bp = new BorderPane();
-        bp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+        double width = 600, height = 400;
 
+        BorderPane bp = new BorderPane();
+        //bp.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
 
         MenuItem save = new MenuItem("Save");
         MenuItem exit = new MenuItem("Exit");
@@ -66,19 +67,18 @@ public class Main extends Application {
         vBox.getChildren().add(toolBar);
         bp.setTop(vBox);
 
-        Canvas canvas = new Canvas();
+        Canvas canvas = new Canvas(width, height);
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-        graphicsContext.setFill(Color.WHITE);
-        canvas.heightProperty().bind(bp.heightProperty());
-        canvas.widthProperty().bind(bp.widthProperty());
         bp.setCenter(canvas);
         graphicsContext.setLineCap(StrokeLineCap.ROUND);
 
+        Paint bg = Color.WHITE;
+        graphicsContext.setFill(bg);
+        graphicsContext.fillRect(0,0, width,height);
+
         Label instruction = new Label("To draw, just drag the mouse on the canvas");
         instruction.setFont(new Font("Arial", 15));
-        instruction.setPadding(new Insets(0, 0, 0, 5));
-        instruction.setMaxHeight(Double.MAX_VALUE);
-        instruction.setMaxWidth(Double.MAX_VALUE);
+        instruction.setPadding(new Insets(0, 0, 5, 5));
         bp.setBottom(instruction);
 
         canvas.setOnMousePressed(e->{
@@ -103,10 +103,6 @@ public class Main extends Application {
             double size = Double.parseDouble(penSize);
             graphicsContext.setLineWidth(size);
         });
-
-        Paint bg = Color.WHITE;
-        graphicsContext.setFill(bg);
-        graphicsContext.fillRect(0,0, 25,25);
 
         eraser.setOnAction(event -> {
             if(eraser.isSelected()){
@@ -137,7 +133,10 @@ public class Main extends Application {
             Platform.exit();
         });
 
-        Scene scene = new Scene(bp, 1000, 650);
+//        canvas.heightProperty().bind(bp.heightProperty());
+//        canvas.widthProperty().bind(bp.widthProperty());
+
+        Scene scene = new Scene(bp, width, height);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
